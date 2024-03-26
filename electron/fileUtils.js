@@ -14,10 +14,13 @@ function traverseDirectory(currentPath) {
         // 获取文件或子目录的状态信息
         const stats = fs.statSync(filePath);
 
+        if (!file.endsWith(".sql") && !stats.isDirectory()) {
+            return;
+        }
         // 构建文件或目录信息对象
         const fileInfo = {
             name: file,
-            type: stats.isDirectory() ? "directory" : "file",
+            type: stats.isDirectory() ? "folder" : "file",
             path: filePath,
             parentFolder: path.basename(currentPath), // 添加存储上级目录的属性
         };
