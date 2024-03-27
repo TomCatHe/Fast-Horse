@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider>
     <a-menu id="dddddd" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" :items="items"
-      @click="handleClick">
+      @click="handleClick" theme="dark">
     </a-menu>
   </a-layout-sider>
 </template>

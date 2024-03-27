@@ -14,8 +14,9 @@ function traverseDirectory(currentPath) {
         const filePath = path.join(currentPath, file);
         // 获取文件或子目录的状态信息
         const stats = fs.statSync(filePath);
-
-        if (!file.endsWith(".sql") && !stats.isDirectory()) {
+        // 过滤掉非.sql文件和非目录
+        const ext = path.extname(file);
+        if (ext.toLowerCase() !== '.sql' && !stats.isDirectory()) {
             return;
         }
         // 构建文件或目录信息对象
