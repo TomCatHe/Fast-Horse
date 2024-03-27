@@ -1,3 +1,4 @@
+// 读取文件目录
 const fs = require("fs");
 const path = require("path");
 

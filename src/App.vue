@@ -5,7 +5,6 @@
       wireframe: true,
     },
   }">
-    <!-- <a-button /> -->
   </a-config-provider>
   <HomeView></HomeView>
 </template>

@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, VueElement, h, onMounted, watchEffect } from 'vue';
+import { reactive, ref, VueElement, h, onMounted, watch } from 'vue';
 import { FolderOpenFilled, DatabaseOutlined } from '@ant-design/icons-vue';
 import type { MenuProps } from 'ant-design-vue';
 
@@ -15,12 +15,12 @@ const selectedKeys = ref<string[]>(['1']);
 const openKeys = ref<string[]>(['sub1']);
 
 const handleClick: MenuProps['onClick'] = e => {
-  // console.log('click', e);
+  console.log('click', e.key);
 };
 
-// watch(openKeys, val => {
-//   console.log('openKeys', val);
-// });
+watch(openKeys, val => {
+  console.log('openKeys', val);
+});
 
 // 本地文件
 
@@ -45,10 +45,10 @@ interface FileOptions {
 
 let filePath = reactive<FileOptions[]>([])
 
+// 打开文目录
 const openFile = async () => {
 
   const data = await window.electronAPI.openFile()
-
   // 文件夹显示在前面，文件显示在后面，下级节点也是文件夹显示在前，文件在后排序
   filePath.push(...data)
   // 递归数据filePath重新写入新的对象items中
@@ -83,15 +83,11 @@ function recursionData(data: FileOptions[]): FileData[] {
   return result;
 }
 
-
-console.log(items);
-
-
-watchEffect(() => {
-  console.log(
-    filePath
-  );
-});
+// watchEffect(() => {
+//   console.log(
+//     filePath
+//   );
+// });
 
 onMounted(() => {
   openFile()

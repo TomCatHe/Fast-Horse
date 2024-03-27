@@ -1,0 +1,11 @@
+{
+    "user": "hc",
+    "password": "1",
+    "server": "127.0.0.1",
+    "port": 8433,
+    "database": "SH_SJZL",
+    "options": {
+        "encrypt": false,
+        "trustServerCertificate": true
+    }
+}
