@@ -1,8 +1,8 @@
 <template>
   <div>
     <div style="margin-bottom: 16px">
-      <a-button type="primary" :disabled="!hasSelected" :loading="state.loading" @click="start">
-        Reload
+      <a-button type="primary" :disabled="!hasSelected" :loading="state.loading" @click="exec">
+        执行
       </a-button>
       <span style="margin-left: 8px">
         <template v-if="hasSelected">
@@ -34,7 +34,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, reactive } from 'vue';
-import { SmileOutlined,DatabaseOutlined  } from '@ant-design/icons-vue';
+import { DatabaseOutlined } from '@ant-design/icons-vue';
 
 type Key = string | number;
 
@@ -65,7 +65,7 @@ const columns = [
   },
 ];
 
-const tableData = reactive<DataType[]>([]);
+let tableData = reactive<DataType[]>([]);
 
 const state = reactive<{
   selectedRowKeys: Key[];
@@ -76,7 +76,7 @@ const state = reactive<{
 });
 const hasSelected = computed(() => state.selectedRowKeys.length > 0);
 
-const start = () => {
+const exec = () => {
   state.loading = true;
   // ajax request after empty completing
   setTimeout(() => {
@@ -91,15 +91,21 @@ const onSelectChange = (selectedRowKeys: Key[]) => {
 };
 
 const getAllFiles = async () => {
-  const data = await window.electronAPI.getAllFiles("C:\\Users\\hecke\\Desktop\\testnodejs");
 
-  tableData.push(...data.map((item: any, index: number) => ({
-    id: index + 1,
-    key: index,
-    name: item.fileName,
-    status: "success",
-    path: item.filePath,
-  })));
+  const folderData = await window.electronAPI.getAllFolders("/Users/hecker/Downloads/testfile");
+
+  folderData.forEach((file: any) => {
+    const filesInFolder = window.electronAPI.getAllFiles(file);
+
+    tableData.push(...filesInFolder.map((item: any, index: number) => ({
+      id: index + 1,
+      key: index,
+      name: item.fileName,
+      status: "success",
+      path: item.filePath,
+    })));
+
+  });
 
 }
 

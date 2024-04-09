@@ -53,6 +53,7 @@ const openFile = async () => {
   filePath.push(...data)
   // 递归数据filePath重新写入新的对象items中
   items.push(...recursionData(filePath))
+  
 }
 
 // 递归数据filePath重新写入新的对象items中

@@ -1,27 +1,31 @@
+// 引入文件系统模块和路径模块
 const fs = require("fs");
 const path = require("path");
 
+// 递归读取指定目录下的所有 SQL 文件
 function walkDir(dir) {
-    const files = fs.readdirSync(dir);
-    const fileObjects = files.map((file) => {
-        const filePath = path.join(dir, file);
-        const isDirectory = fs.lstatSync(filePath).isDirectory();
-        if (isDirectory) {
-            return walkDir(filePath); // 递归处理子目录
-        } else {
-            const ext = path.extname(file);
-            if (ext.toLowerCase() === '.sql') {
-                return {
-                    fileName: file,
-                    filePath: filePath,
-                    parentDirectory: dir
-                };
-            } else {
-                return null;  // 过滤掉非SQL文件
-            }
-        }
-    });
-    return fileObjects.flat().filter((file) => file !== null);  // 移除空entries
+  // 读取目录下的所有文件
+  const files = fs.readdirSync(dir);
+  const fileObjects = [];
+
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const ext = path.extname(file);
+    if (ext.toLowerCase() === ".sql") {
+      fileObjects.push({
+        fileName: file,
+        filePath: filePath,
+        parentDirectory: dir,
+      });
+    }
+  });
+
+  // 按照文件名的首字母进行排序
+  fileObjects.sort((a, b) =>
+    a.fileName.localeCompare(b.fileName, "zh", { sensitivity: "base" })
+  );
+
+  return fileObjects;
 }
 
 module.exports = walkDir;
