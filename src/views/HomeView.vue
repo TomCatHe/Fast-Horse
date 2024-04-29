@@ -2,7 +2,7 @@
   <a-layout>
     <!-- <a-layout-header :style="headerStyle">Header</a-layout-header> -->
     <a-layout>
-      <Sider></Sider>
+<!--      <Sider></Sider>-->
       <ContentList></ContentList>
     </a-layout>
   </a-layout>

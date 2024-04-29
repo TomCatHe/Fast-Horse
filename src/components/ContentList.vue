@@ -76,13 +76,18 @@ const state = reactive<{
 });
 const hasSelected = computed(() => state.selectedRowKeys.length > 0);
 
-const exec = () => {
-  state.loading = true;
-  // ajax request after empty completing
-  setTimeout(() => {
-    state.loading = false;
-    state.selectedRowKeys = [];
-  }, 1000);
+const exec = async () => {
+
+  const exexuteSql = await window.electronAPI.executeSqlScript("/Users/hecker/Downloads/his2312数据库/1、数据库/清空00操作员密码.sql");
+
+  console.log(exexuteSql);
+
+  // state.loading = true;
+  // // ajax request after empty completing
+  // setTimeout(() => {
+  //   state.loading = false;
+  //   state.selectedRowKeys = [];
+  // }, 1000);
 };
 
 const onSelectChange = (selectedRowKeys: Key[]) => {
@@ -92,7 +97,7 @@ const onSelectChange = (selectedRowKeys: Key[]) => {
 
 const getAllFiles = async () => {
 
-  const folderData = await window.electronAPI.getAllFolders("/Users/hecker/Downloads/testfile");
+  const folderData = await window.electronAPI.getAllFolders("/Users/hecker/Downloads/his2312数据库");
 
   folderData.forEach((file: any) => {
     const filesInFolder = window.electronAPI.getAllFiles(file);
