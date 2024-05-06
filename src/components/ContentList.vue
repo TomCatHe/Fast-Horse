@@ -80,7 +80,7 @@ const exec = async () => {
 
   const exexuteSql = await window.electronAPI.executeSqlScript("/Users/hecker/Downloads/his2312数据库/1、数据库/清空00操作员密码.sql");
 
-  console.log(exexuteSql);
+  // console.log(exexuteSql);
 
   // state.loading = true;
   // // ajax request after empty completing
