@@ -1,55 +1,62 @@
-const sql = require("mssql");
+// tedio模块的Connection和Request类
+const { Connection, Request } = require("tedious");
 const dbConfig = require("../src/config/dbconfig.json");
-const readFileContent = require("./read-file-content");
 
-// 检查dbConfig中的属性是否定义
-if (
-  !dbConfig.user ||
-  !dbConfig.password ||
-  !dbConfig.server ||
-  !dbConfig.port ||
-  !dbConfig.database
-) {
-  console.error("Database configuration is incomplete or missing");
-  return;
-}
-
+// 配置连接参数
 const config = {
-  user: dbConfig.user,
-  password: dbConfig.password,
   server: dbConfig.server,
-  port: dbConfig.port,
-  database: dbConfig.database,
+  authentication: {
+    type: "default",
+    options: {
+      userName: dbConfig.user,
+      password: dbConfig.password,
+    },
+  },
   options: {
-    encrypt: dbConfig.options.encrypt,
-    trustServerCertificate: dbConfig.options.trustServerCertificate,
+    database: dbConfig.database,
+    encrypt: dbConfig.options.encrypt, // 如果是Azure SQL数据库，需要设置为true
   },
 };
 
-async function executeSqlScript(scriptPath) {
-//   const scriptPathUTF8 = readFileContent(scriptPath);
-//   scriptPath = scriptPathUTF8;
-//   console.log(scriptPath);
-  let message = "";
-  try {
-    await sql.connect(config);
-    const request = new sql.Request();
-    const script = require("fs").readFileSync(scriptPath, "utf8");
-    await request.batch(script);
-    message = {
-      status: "success",
-      message: "SQL script executed successfully",
-    };
-  } catch (err) {
-    message = {
-      status: "error",
-      message:
-        "Error on line:" + err.lineNumber + ",Error message:" + err.message,
-    };
-  } finally {
-    sql.close();
+// 创建到数据库的连接
+const connection = new Connection(config);
+
+// 监听连接事件
+connection.on("connect", (err) => {
+  console.log("Connected");
+  if (err) {
+    console.error(err.message);
+  } else {
+    // 连接成功，执行查询
+    executeStatement();
   }
-  return message;
+});
+
+connection.connect();
+
+// 执行SQL查询
+function executeStatement(scriptPath) {
+  const script = require("fs").readFileSync(scriptPath, "utf8");
+  // console.log(script);
+  const request = new Request("select top 1 * from YY_CONFIG", (err, rowCount) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log();
+      console.log(`${rowCount} rows returned222`);
+    }
+    connection.close();
+  });
+  
+  // 监听行事件
+  request.on("row", (columns) => {
+    
+    columns.forEach((column) => {
+      console.log(column.value);
+    });
+  });
+
+  connection.execSql(request);
 }
 
-module.exports = executeSqlScript;
+module.exports = executeStatement;

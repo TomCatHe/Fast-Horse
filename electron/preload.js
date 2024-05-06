@@ -3,7 +3,7 @@ const traverseDirectory = require("./traverse-directory");
 const readFileContent = require("./read-file-content");
 const getAllFiles = require("./get-all-files");
 const getAllFolders = require("./get-all-folders");
-const executeSqlScript = require("./exec-script");
+const executeSqlScript = require("./exec-mssql-script");
 
 const directoryInfo = traverseDirectory("/Users/hecker/Downloads/his2312数据库");
 
